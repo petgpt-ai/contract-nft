@@ -38,7 +38,7 @@ abstract contract ERC721APet is
 
     /**
      * @dev See {ERC2981-_setDefaultRoyalty}.
-     * 1=1%
+     * 10=1%
      */
     function setDefaultRoyalty(
         address receiver,
