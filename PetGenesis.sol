@@ -43,7 +43,7 @@ contract PetGenesis is ERC721APet, PetMerkle {
 
     constructor(bytes32 merkleRoot) ERC721A("PetGenesis", "PG") {
         setAllowList(merkleRoot);
-        setDefaultRoyalty(owner(), 10);
+        setDefaultRoyalty(owner(), 25);
     }
 
     function _startTokenId() internal view virtual override returns (uint256) {

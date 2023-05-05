@@ -44,7 +44,7 @@ abstract contract ERC721APet is
         address receiver,
         uint96 feeNumerator
     ) public onlyOwner {
-        _setDefaultRoyalty(receiver, feeNumerator * 100);
+        _setDefaultRoyalty(receiver, feeNumerator * 10);
     }
 
     /**
