@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "./lib/ERC721APet.sol";
 import "./lib/PetMerkle.sol";
 
-contract PetGenesis is ERC721APet, PetMerkle {
+contract CatScientist is ERC721APet, PetMerkle {
     // state vars
     uint256 public constant MAX_SUPPLY = 3000;
     string private _baseURIextended;
@@ -41,7 +41,7 @@ contract PetGenesis is ERC721APet, PetMerkle {
     // *************************************************************************
     // FUNCTIONS
 
-    constructor(bytes32 merkleRoot) ERC721A("PetGenesis", "PG") {
+    constructor(bytes32 merkleRoot) ERC721A("CatScientist", "CS") {
         setAllowList(merkleRoot);
         // 10=1%
         setDefaultRoyalty(owner(), 25);
