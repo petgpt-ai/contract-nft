@@ -6,14 +6,12 @@ import "./lib/PetMerkle.sol";
 
 contract CatScientist is ERC721APet, PetMerkle {
     // state vars
-    uint256 public constant MAX_SUPPLY = 3000;
+    uint256 public constant MAX_SUPPLY = 600;
     string private _baseURIextended;
-    // *************************************************************************
-    // CUSTOM ERRORS
-    /// Exceeds maximum supply
+    /**
+     * Exceeds maximum supply.
+     */
     error ExceedsMaximumSupply();
-    // *************************************************************************
-    // EVENTS
     /**
      * @dev emit when a user claims tokens on the allowlist
      * @param userAddress the minting wallet and token recipient
@@ -23,9 +21,6 @@ contract CatScientist is ERC721APet, PetMerkle {
         address indexed userAddress,
         uint256 numberOfTokens
     );
-
-    // *************************************************************************
-    // MODIFIERS
 
     /**
      * @dev revert if minting a quantity of tokens would exceed the maximum supply
@@ -37,9 +32,6 @@ contract CatScientist is ERC721APet, PetMerkle {
         }
         _;
     }
-
-    // *************************************************************************
-    // FUNCTIONS
 
     constructor(bytes32 merkleRoot) ERC721A("CatScientist", "CS") {
         setAllowList(merkleRoot);
