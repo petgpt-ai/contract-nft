@@ -43,6 +43,12 @@ contract CatScientist is ERC721APet, PetMerkle {
         return 1;
     }
 
+    uint public startTime = 1689250860;
+
+    function setStartTime(uint start) public onlyOwner {
+        startTime = start;
+    }
+
     // *************************************************************************
     // CLAIM - Allowlist claim from EOS snapshot
     /**
@@ -63,6 +69,7 @@ contract CatScientist is ERC721APet, PetMerkle {
         uint256 tokenQuota,
         bytes32[] calldata proof
     ) external supplyAvailable(numberOfTokens) {
+        require(block.timestamp >= startTime, 'Mint time has not yet begun');
         address claimer = msg.sender;
         // check if the claimer has tokens remaining in their quota
         uint256 tokensClaimed = getAllowListMinted(claimer);
@@ -109,10 +116,10 @@ contract CatScientist is ERC721APet, PetMerkle {
     function _baseURI() internal view virtual override returns (string memory) {
         return _baseURIextended;
     }
-    
+
     function withdraw() external onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(this).balance
+        (bool success,) = payable(msg.sender).call{
+        value : address(this).balance
         }("");
         require(success, "transfer failed.");
     }
