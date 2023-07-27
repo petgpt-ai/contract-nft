@@ -43,7 +43,8 @@ contract CatScientist is ERC721APet, PetMerkle {
         return 1;
     }
 
-    uint public startTime = 1689250860;
+    // Mint Date: July 26, 11:00 (UTC+8)
+    uint public startTime = 1690340400;
 
     function setStartTime(uint start) public onlyOwner {
         startTime = start;
