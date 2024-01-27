@@ -52,7 +52,6 @@ contract CatScientist is ERC721APet, PetMerkle {
     }
 
     mapping(uint256 => uint256[7]) public tokenAttributes;
-    mapping(address => uint256) public spaceSuitNum;
     uint256[] public spaceSuitCodes = [1, 2, 3];
 
     function setSpaceSuitCodes(uint256[] calldata spaceSuitCodes_) public onlyOwner {
@@ -105,7 +104,7 @@ contract CatScientist is ERC721APet, PetMerkle {
             if (clothesCode != 0 && isSpaceSuit(clothesCode)) {
                 require(spaceSuitTotalSupply < spaceSuitMaxSupply, 'Exceeds Space Suit maximum supply');
                 // check if the claimer has tokens remaining in their quota
-                uint256 tokensClaimed = spaceSuitNum[claimer];
+                uint256 tokensClaimed = getAllowListMinted(claimer);
                 if (tokensClaimed + numberOfTokens > tokenQuota) {
                     revert ExceedsAllowListQuota();
                 }
@@ -116,7 +115,6 @@ contract CatScientist is ERC721APet, PetMerkle {
                 // claim tokens
                 _setAllowListMinted(claimer, numberOfTokens);
                 spaceSuitTotalSupply++;
-                spaceSuitNum[claimer] += numberOfTokens;
             }
             tokenAttributes[_nextTokenId()] = attributes;
         }
