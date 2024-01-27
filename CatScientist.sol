@@ -6,7 +6,7 @@ import "./lib/PetMerkle.sol";
 
 contract CatScientist is ERC721APet, PetMerkle {
     // state vars
-    uint256 public constant MAX_SUPPLY = 100;
+    uint256 public constant MAX_SUPPLY = 3000;
     string private _baseURIextended;
     uint256 public price = 0.5 ether;
     /**
@@ -44,7 +44,7 @@ contract CatScientist is ERC721APet, PetMerkle {
         return 1;
     }
 
-    uint256 public spaceSuitMaxSupply = 3;
+    uint256 public spaceSuitMaxSupply = 200;
     uint256 public spaceSuitTotalSupply = 0;
 
     function setSpaceSuitMaxSupply(uint256 spaceSuitMaxSupply_) public onlyOwner {
