@@ -6,8 +6,9 @@ import "./lib/PetMerkle.sol";
 
 contract CatScientist is ERC721APet, PetMerkle {
     // state vars
-    uint256 public constant MAX_SUPPLY = 600;
+    uint256 public constant MAX_SUPPLY = 100;
     string private _baseURIextended;
+    uint256 public price = 0.5 ether;
     /**
      * Exceeds maximum supply.
      */
@@ -43,13 +44,33 @@ contract CatScientist is ERC721APet, PetMerkle {
         return 1;
     }
 
-    // Mint Date: July 26, 11:00 (UTC+8)
-    uint public startTime = 1690340400;
+    uint256 public spaceSuitMaxSupply = 3;
+    uint256 public spaceSuitTotalSupply = 0;
 
-    function setStartTime(uint start) public onlyOwner {
-        startTime = start;
+    function setSpaceSuitMaxSupply(uint256 spaceSuitMaxSupply_) public onlyOwner {
+        spaceSuitMaxSupply = spaceSuitMaxSupply_;
     }
 
+    mapping(uint256 => uint256[7]) public tokenAttributes;
+    mapping(address => uint256) public spaceSuitNum;
+    uint256[] public spaceSuitCodes = [1, 2, 3];
+
+    function setSpaceSuitCodes(uint256[] calldata spaceSuitCodes_) public onlyOwner {
+        spaceSuitCodes = spaceSuitCodes_;
+    }
+
+    function isSpaceSuit(uint256 spaceSuitCode) private view returns (bool) {
+        for (uint256 i = 0; i < spaceSuitCodes.length; i++) {
+            if (spaceSuitCodes[i] == spaceSuitCode) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function setPrice(uint256 price_) public onlyOwner {
+        price = price_;
+    }
     // *************************************************************************
     // CLAIM - Allowlist claim from EOS snapshot
     /**
@@ -64,27 +85,44 @@ contract CatScientist is ERC721APet, PetMerkle {
      * @param numberOfTokens the number of tokens to claim
      * @param tokenQuota the total quota of tokens for the claiming address
      * @param proof the Merkle proof for this claimer
+     * @param attributes the nft attributes
      */
     function mintAllowList(
         uint256 numberOfTokens,
         uint256 tokenQuota,
-        bytes32[] calldata proof
-    ) external supplyAvailable(numberOfTokens) {
-        require(block.timestamp >= startTime, 'Mint time has not yet begun');
+        bytes32[] calldata proof,
+        uint256[7] calldata attributes
+    ) payable external supplyAvailable(numberOfTokens) {
         address claimer = msg.sender;
-        // check if the claimer has tokens remaining in their quota
-        uint256 tokensClaimed = getAllowListMinted(claimer);
-        if (tokensClaimed + numberOfTokens > tokenQuota) {
-            revert ExceedsAllowListQuota();
+        uint256 value = msg.value;
+        uint256 totalPrice = price * numberOfTokens;
+        require(value >= totalPrice, 'Insufficient payment amount');
+        if (value > totalPrice) {
+            payable(claimer).transfer(value - totalPrice);
         }
-
-        // check if the claimer is on the allowlist
-        if (!onAllowListB(claimer, tokenQuota, proof)) {
-            revert NotOnAllowList();
+        if (numberOfTokens <= 1) {
+            uint256 clothesCode = attributes[6];
+            if (clothesCode != 0 && isSpaceSuit(clothesCode)) {
+                require(spaceSuitTotalSupply < spaceSuitMaxSupply, 'Exceeds Space Suit maximum supply');
+                // check if the claimer has tokens remaining in their quota
+                uint256 tokensClaimed = spaceSuitNum[claimer];
+                if (tokensClaimed + numberOfTokens > tokenQuota) {
+                    revert ExceedsAllowListQuota();
+                }
+                // check if the claimer is on the allowlist
+                if (!onAllowListB(claimer, tokenQuota, proof)) {
+                    revert NotOnAllowList();
+                }
+                // claim tokens
+                _setAllowListMinted(claimer, numberOfTokens);
+                spaceSuitTotalSupply++;
+                spaceSuitNum[claimer] += numberOfTokens;
+            }
+            tokenAttributes[_nextTokenId()] = attributes;
         }
-
-        // claim tokens
-        _setAllowListMinted(claimer, numberOfTokens);
+        if (totalPrice > 0) {
+            payable(owner()).transfer(totalPrice);
+        }
         _safeMint(claimer, numberOfTokens);
         emit AllowListClaimMint(claimer, numberOfTokens);
     }
