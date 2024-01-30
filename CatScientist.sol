@@ -34,8 +34,7 @@ contract CatScientist is ERC721APet, PetMerkle {
         _;
     }
 
-    constructor(bytes32 merkleRoot) ERC721A("CatScientist", "CS") {
-        setAllowList(merkleRoot);
+    constructor() ERC721A("CatScientist", "CS") {
         // 10=1%
         setDefaultRoyalty(owner(), 25);
     }
