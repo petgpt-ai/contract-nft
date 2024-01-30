@@ -6,9 +6,9 @@ import "./lib/PetMerkle.sol";
 
 contract CatScientist is ERC721APet, PetMerkle {
     // state vars
-    uint256 public constant MAX_SUPPLY = 3000;
+    uint256 public constant MAX_SUPPLY = 2000;
     string private _baseURIextended;
-    uint256 public price = 0.5 ether;
+    uint256 public price = 0.3 ether;
     /**
      * Exceeds maximum supply.
      */
