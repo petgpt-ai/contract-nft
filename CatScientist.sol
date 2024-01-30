@@ -52,6 +52,21 @@ contract CatScientist is ERC721APet, PetMerkle {
     }
 
     mapping(uint256 => uint256[7]) public tokenAttributes;
+
+    function getTokenAttributes(uint256 start, uint256 end) public view returns (uint256[7][] memory tokenAttributes_) {
+        uint end1 = end + 1;
+        uint index;
+        tokenAttributes_ = new uint256[7][](end1 - start);
+        for (uint256 tokenId = start; tokenId < end1; tokenId++) {
+            tokenAttributes_[index++] = tokenAttributes[tokenId];
+        }
+        return tokenAttributes_;
+    }
+
+    function totalMinted() public view virtual returns (uint256) {
+        return _totalMinted();
+    }
+
     uint256[] public spaceSuitCodes = [1, 2, 3];
 
     function setSpaceSuitCodes(uint256[] calldata spaceSuitCodes_) public onlyOwner {
