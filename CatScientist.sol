@@ -113,7 +113,7 @@ contract CatScientist is ERC721APet, PetMerkle {
         if (value > totalPrice) {
             payable(claimer).transfer(value - totalPrice);
         }
-        if (numberOfTokens <= 1) {
+        if (numberOfTokens == 1) {
             uint256 clothesCode = attributes[6];
             if (clothesCode != 0 && isSpaceSuit(clothesCode)) {
                 require(spaceSuitTotalSupply < spaceSuitMaxSupply, 'Exceeds Space Suit maximum supply');
